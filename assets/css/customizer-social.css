@@ -1,0 +1,92 @@
+.iran-social-items-list {
+    margin-top: 10px;
+}
+
+.iran-social-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.iran-social-item-header {
+    padding: 10px;
+    cursor: move;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.iran-social-item-header .actions {
+    display: flex;
+    gap: 5px;
+}
+
+.iran-social-item-content {
+    padding: 10px;
+    display: none;
+}
+
+.iran-social-item.expanded .iran-social-item-content {
+    display: block;
+}
+
+.iran-social-item-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.iran-social-item-content input[type="text"],
+.iran-social-item-content input[type="url"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.iran-social-item-content .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.iran-social-item-content .icon-custom-svg-fields {
+    background: #f0f0f1;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.custom-svg-preview img {
+    display: block;
+    margin: 0 auto 10px;
+    max-height: 40px;
+}
+
+.icon-lucide-fields label, .icon-custom-svg-fields label {
+    margin-top: 10px;
+}
+
+.item-icon-type {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.iran-social-item-header .toggle-item {
+    cursor: pointer;
+    color: #2271b1;
+}
+
+.iran-social-item-header .remove-item {
+    cursor: pointer;
+    color: #d63638;
+}
+
+.add-social-item-btn {
+    margin-top: 10px;
+    width: 100%;
+}
