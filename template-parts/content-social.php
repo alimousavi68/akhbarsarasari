@@ -19,7 +19,7 @@ $items = json_decode( $items_json, true );
 if ( empty( $items ) ) return;
 ?>
 <!-- Social Media Section -->
-<section class="container-custom mt-20 mb-12" aria-labelledby="social-section-title">
+<section class="container-custom mt-20 mb-12 print:hidden" aria-labelledby="social-section-title">
     <div class="flex flex-col lg:flex-row gap-8 items-center lg:items-stretch">
         <!-- Left: Title Content -->
         <div class="lg:w-1/3 flex flex-col justify-center text-center lg:text-right">

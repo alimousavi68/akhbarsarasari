@@ -1,11 +1,11 @@
 /*
-Theme Name: Iran News
-Theme URI: https://example.com/iran
-Author: Your Name
-Author URI: https://example.com
+Theme Name: AkhabreIran
+Theme URI: https://ihasht.com/
+Author: Ihasht.com
+Author URI: https://ihasht.com/
 Description: A modern Persian news theme based on Vite and Tailwind CSS.
 Version: 1.0.0
-Text Domain: iran
+Text Domain: akhabreiran
 */
 
 @font-face {
@@ -71,41 +71,72 @@ Text Domain: iran
 .mobile-submenu-container .mobile-submenu {
     display: none;
     flex-direction: column;
-    padding-right: 1rem;
-    background-color: rgba(249, 250, 251, 0.5);
-    border-radius: 0.5rem;
-    margin-top: 0.5rem;
+    padding-right: 1.25rem;
+    background-color: rgba(249, 250, 251, 0.8);
+    border-radius: 0.75rem;
+    margin-top: 0.25rem;
     margin-bottom: 0.5rem;
-    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .dark .mobile-submenu-container .mobile-submenu {
-    background-color: rgba(17, 24, 39, 0.5);
+    background-color: rgba(17, 24, 39, 0.6);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .mobile-submenu-container.active .mobile-submenu {
     display: flex;
+    animation: mobileSubmenuSlideDown 0.3s ease-out;
 }
 
-.mobile-submenu-container.active button i {
+@keyframes mobileSubmenuSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-submenu-container.active .mobile-submenu-toggle svg,
+.mobile-submenu-container.active .mobile-submenu-toggle i {
     transform: rotate(180deg);
     color: #cc4345;
 }
 
-.mobile-submenu-container.active .mobile-nav-item {
-    color: #cc4345;
-    font-weight: 700;
+.mobile-nav-item, .mobile-sub-nav-item {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: #4b5563;
+    transition: all 0.2s ease;
 }
 
-.mobile-submenu .mobile-nav-item {
+.dark .mobile-nav-item, .dark .mobile-sub-nav-item {
+    color: #9ca3af;
+}
+
+.mobile-nav-item-active {
+    color: #cc4345 !important;
+    font-weight: 700 !important;
+}
+
+.mobile-sub-nav-item {
+    font-size: 14px;
+    padding: 0.75rem 0;
+}
+
+.mobile-sub-nav-item:hover {
+    color: #cc4345;
+    padding-right: 0.25rem;
+}
+
+.mobile-submenu .mobile-sub-nav-item {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    font-size: 15px;
+    font-size: 14px;
     border-bottom: 0;
     opacity: 0.8;
 }
 
-.mobile-submenu .mobile-nav-item:hover {
+.mobile-submenu .mobile-sub-nav-item:hover {
     opacity: 1;
 }
 

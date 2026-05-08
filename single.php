@@ -38,7 +38,7 @@ if ( have_posts() ) :
                             <a href="https://wa.me/?text=<?php echo urlencode( get_the_permalink() ); ?>"
                                 class="w-8 h-8 rounded-full border border-[#e0e0e0] flex items-center justify-center text-gray-400 hover:text-brand hover:border-brand transition-all"
                                 title="واتساپ" target="_blank">
-                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/whatsapp-line.svg" class="w-4 h-4 opacity-50 group-hover:opacity-100" style="filter: grayscale(1) brightness(0.5);" alt="واتساپ">
                             </a>
                             <a href="https://t.me/share/url?url=<?php echo urlencode( get_the_permalink() ); ?>"
                                 class="w-8 h-8 rounded-full border border-[#e0e0e0] flex items-center justify-center text-gray-400 hover:text-brand hover:border-brand transition-all"
@@ -56,7 +56,7 @@ if ( have_posts() ) :
                                 title="کپی لینک">
                                 <i data-lucide="link" class="w-4 h-4"></i>
                             </button>
-                            <a href="#comments"
+                            <a href="#comments" id="comment-scroll-btn"
                                 class="w-8 h-8 rounded-full border border-[#e0e0e0] flex items-center justify-center text-gray-400 hover:text-brand hover:border-brand transition-all"
                                 title="نظرات">
                                 <i data-lucide="message-square" class="w-4 h-4"></i>
@@ -95,14 +95,21 @@ if ( have_posts() ) :
                     </header>
 
                     <!-- Post Content Area -->
-                    <div class="post-content mb-12">
+                    <div id='post-content' class="post-content mb-12">
                         <?php the_content(); ?>
                     </div>
 
+                    <!-- Post Bottom Widget Area -->
+                    <?php if ( is_active_sidebar( 'post-bottom-ad' ) ) : ?>
+                        <div class="post-bottom-widgets">
+                            <?php dynamic_sidebar( 'post-bottom-ad' ); ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- Post Footer (Tags, Shortlink) -->
-                    <footer class="mb-12 print:hidden border-t border-[#e0e0e0] pt-10">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
-                            <div class="flex flex-wrap items-center gap-2">
+                    <footer class="mb-1 print:hidden border-t border-[#e0e0e0] pt-1">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-1 mb-1">
+                            <div class="flex flex-wrap items-center gap-1">
                                 <?php
                                 $tags = get_the_tags();
                                 if ( $tags ) :
@@ -119,16 +126,16 @@ if ( have_posts() ) :
                                 ?>
                             </div>
 
-                            <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-xl p-3 lg:p-4 flex items-center gap-3 max-w-xs lg:max-w-sm">
-                                <div class="flex items-center gap-2 text-gray-500 shrink-0">
-                                    <i data-lucide="link" class="w-3.5 h-3.5"></i>
-                                    <span class="text-[11px] font-medium hidden sm:inline">لینک کوتاه:</span>
+                            <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-xl p-1.5 lg:p-2 flex items-center gap-2.5">
+                                <div class="flex items-center gap-1.5 text-gray-500 shrink-0">
+                                    <i data-lucide="link" class="w-3 h-3"></i>
+                                    <span class="text-[10px] font-medium hidden sm:inline">لینک کوتاه:</span>
                                 </div>
-                                <div class="relative flex-1 flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5">
-                                    <div class="text-[11px] font-mono text-gray-500 dark:text-gray-400 truncate" id="short-link-text"><?php echo wp_get_shortlink(); ?></div>
+                                <div class="relative flex-1 flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-1">
+                                    <div class="text-[10px] font-mono text-gray-500 dark:text-gray-400 truncate" id="short-link-text"><?php echo wp_get_shortlink(); ?></div>
                                     <button id="copy-link-btn"
-                                        class="mr-2 text-gray-400 hover:text-brand transition-colors">
-                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                        class="mr-1.5 text-gray-400 hover:text-brand transition-colors">
+                                        <i data-lucide="copy" class="w-3 h-3"></i>
                                     </button>
                                 </div>
                             </div>
@@ -218,11 +225,19 @@ if ( have_posts() ) :
                             </a>
                             <?php endwhile; wp_reset_postdata(); ?>
                         </div>
+                        <div class="mt-12 border-b border-gray-200 dark:border-gray-700"></div>
                     </section>
                     <?php endif; ?>
 
                     <!-- Social Media Section -->
                     <?php get_template_part( 'template-parts/content', 'social' ); ?>
+
+                    <!-- After Social Media Widget Area -->
+                    <?php if ( is_active_sidebar( 'post-after-social-ad' ) ) : ?>
+                        <div class="post-after-social-widgets">
+                            <?php dynamic_sidebar( 'post-after-social-ad' ); ?>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Comments Section -->
                     <?php

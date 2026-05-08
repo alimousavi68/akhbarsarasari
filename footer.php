@@ -1,33 +1,32 @@
     <!-- Footer -->
-    <footer class="bg-[#1a1a1a] text-gray-400 pt-12 pb-24 lg:pb-12 border-t border-gray-800">
+    <footer class="bg-[#1a1a1a] text-gray-400 pt-12 pb-4 lg:pb-6 border-t border-gray-800">
         <div class="container-custom">
             <div class="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
                
                 <div class="hidden lg:block max-w-[420px]  gap-2">
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="block">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.svg" alt="<?php bloginfo( 'name' ); ?>" class="h-16 w-auto">
+                        <?php
+                        $custom_logo_id = get_theme_mod( 'custom_logo' );
+                        $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+                        if ( has_custom_logo() ) {
+                            echo '<img src="' . esc_url( $logo[0] ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
+                        } else {
+                            echo '<img src="' . esc_url( get_template_directory_uri() . '/assets/images/logo.svg' ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
+                        }
+                        ?>
                     </a>
                     <p class="text-sm text-gray-400 leading-loose">
                         <?php bloginfo( 'description' ); ?>
                     </p>
+                    <p>
+                        اخبار ایران، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.
+                    </p>
                 </div>
                 <?php if ( is_active_sidebar( 'footer-sidebar' ) ) : ?>
                     <?php dynamic_sidebar( 'footer-sidebar' ); ?>
-                <?php else : ?>
-                <div class="w-full lg:w-auto">
-                    <h4 class="text-white text-lg font-medium mb-5 text-center lg:text-right">مجوزها</h4>
-                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/eresaneh.png" alt="مجوز رسانه" class="h-[85px] w-auto object-contain" width="100" height="85" loading="lazy">
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/rezi.webp" alt="نماد اعتماد رسانه" class="h-[85px] w-auto object-contain" width="100" height="85" loading="lazy">
-                        </div>
-                    </div>
-                </div>
                 <?php endif; ?>
             </div>
-            <div class="pt-8 mt-8 border-t border-gray-800 text-center text-xs text-gray-500">
+            <div class="pt-4 mt-4 border-t border-gray-800 text-center text-xs text-gray-500">
                 <p>طراحی و توسعه: <a href="#" class="text-brand hover:underline transition-all">هشت بهشت</a></p>
             </div>
         </div>

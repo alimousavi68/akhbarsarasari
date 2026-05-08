@@ -23,7 +23,7 @@ if ( post_password_required() ) {
 <div id="comments" class="comments-area mt-12 space-y-6">
 
     <!-- Comments List Accordion -->
-    <div class="comments-list-section bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800">
+    <div class="comments-list-section bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <button class="w-full flex items-center justify-between p-5 text-right transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 accordion-toggle" data-target="comments-list-content">
             <div class="flex items-center gap-3">
                 <i data-lucide="message-square" class="w-5 h-5 text-brand"></i>
@@ -84,7 +84,7 @@ if ( post_password_required() ) {
 
     <!-- Comment Form Accordion -->
     <?php if ( comments_open() ) : ?>
-        <div class="comment-form-section bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm">
+        <div class="comment-form-section bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
             <button class="w-full flex items-center justify-between p-5 text-right transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 accordion-toggle" data-target="comment-form-content">
                 <div class="flex items-center gap-3">
                     <i data-lucide="pen-tool" class="w-5 h-5 text-brand"></i>
@@ -108,6 +108,7 @@ if ( post_password_required() ) {
                                         <input id="email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" placeholder="' . __( 'ایمیل شما (الزامی - منتشر نمی‌شود)', 'iran' ) . '" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all" ' . $aria_req . '>
                                     </div>
                                 </div>',
+                    'cookies' => '', // Remove cookies checkbox
                 );
 
                 $comment_field = '<div class="mb-4">

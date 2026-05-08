@@ -90,7 +90,7 @@ get_header();
             </div>
         </section>
         <?php endif; // End iran_show_hero ?>
-        <hr class="mb-8" style="color: #ebe6e7;">
+        <hr class="mb-8 lg:border-b lg:border-gray-200 lg:dark:border-gray-800" >
         
         <!-- Main Content Area -->
         <section class="container-custom ">
@@ -169,14 +169,9 @@ get_header();
         <?php get_template_part( 'template-parts/content', 'social' ); ?>
 
         <!-- Display Ad Banner -->
-        <section class="container-custom my-10">
-            <div class="relative group overflow-hidden rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 aspect-[9/3] lg:aspect-[9/1] flex items-center justify-center bg-gray-50/50 dark:bg-gray-900/50">
-                <div class="text-center">
-                    <i data-lucide="image" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
-                    <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">محل تبلیغات شما</span>
-                </div>
-            </div>
-        </section>
+        <?php if ( is_active_sidebar( 'home-banner-ad' ) ) : ?>
+            <?php dynamic_sidebar( 'home-banner-ad' ); ?>
+        <?php endif; ?>
     </main>
 
 <?php

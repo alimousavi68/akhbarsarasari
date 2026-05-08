@@ -159,6 +159,42 @@ function iran_news_widgets_init() {
 			'after_title'   => '</h4>',
 		)
 	);
+
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'تبلیغات بنری صفحه اصلی', 'iran' ),
+			'id'            => 'home-banner-ad',
+			'description'   => esc_html__( 'جایگاه بنر عریض در پایین صفحه اصلی.', 'iran' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s container-custom my-10">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2 class="hidden">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'زیر نوشته (Single)', 'iran' ),
+			'id'            => 'post-bottom-ad',
+			'description'   => esc_html__( 'جایگاه ابزارک در انتهای محتوای نوشته.', 'iran' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s mb-12">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2 class="text-xl font-bold mb-6 flex items-center gap-3"><span class="w-1.5 h-6 bg-brand rounded-full"></span>',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'زیر شبکه‌های اجتماعی (Single)', 'iran' ),
+			'id'            => 'post-after-social-ad',
+			'description'   => esc_html__( 'جایگاه ابزارک در پایین بخش اشتراک‌گذاری نوشته.', 'iran' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s mb-12">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2 class="text-xl font-bold mb-6 flex items-center gap-3"><span class="w-1.5 h-6 bg-brand rounded-full"></span>',
+			'after_title'   => '</h2>',
+		)
+	);
 }
 add_action( 'widgets_init', 'iran_news_widgets_init' );
 
@@ -173,6 +209,10 @@ function iran_news_scripts() {
 	// Enqueue scripts
 	wp_enqueue_script( 'lucide', get_template_directory_uri() . '/assets/js/lucide.min.js', array(), '1.0.0', true );
 	wp_enqueue_script( 'iran-news-main', get_template_directory_uri() . '/assets/js/main.js', array('lucide'), '1.0.0', true );
+
+	if ( is_singular() && comments_open() ) {
+		wp_enqueue_script( 'iran-news-comments', get_template_directory_uri() . '/assets/js/comments.js', array('lucide'), '1.0.0', true );
+	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -190,6 +230,54 @@ function iran_news_script_loader_tag($tag, $handle, $src) {
     return $tag;
 }
 add_filter('script_loader_tag', 'iran_news_script_loader_tag', 10, 3);
+
+/**
+ * Render themed pagination links.
+ *
+ * @return void
+ */
+function iran_news_render_pagination() {
+	$links = paginate_links(
+		array(
+			'type'      => 'array',
+			'mid_size'  => 1,
+			'end_size'  => 1,
+			'prev_text' => '<i data-lucide="chevron-right" class="w-4 h-4"></i>',
+			'next_text' => '<i data-lucide="chevron-left" class="w-4 h-4"></i>',
+		)
+	);
+
+	if ( empty( $links ) || ! is_array( $links ) ) {
+		return;
+	}
+	?>
+	<nav class="mt-10 flex items-center justify-center" aria-label="<?php esc_attr_e( 'صفحه‌بندی نوشته‌ها', 'iran' ); ?>">
+		<div class="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-slate-900">
+			<?php foreach ( $links as $link ) : ?>
+				<?php
+				$link = str_replace(
+					'page-numbers',
+					'page-numbers inline-flex min-w-10 h-10 items-center justify-center rounded-xl border border-transparent px-3 text-sm font-medium text-gray-600 transition-colors hover:border-brand/20 hover:bg-brand hover:text-white dark:text-gray-300 dark:hover:border-brand/30',
+					$link
+				);
+				$link = str_replace(
+					'current',
+					'current border-brand bg-brand text-white shadow-sm',
+					$link
+				);
+				$link = str_replace(
+					'dots',
+					'dots pointer-events-none text-gray-400 dark:text-gray-500',
+					$link
+				);
+
+				echo wp_kses_post( $link );
+				?>
+			<?php endforeach; ?>
+		</div>
+	</nav>
+	<?php
+}
 
 /**
  * Custom Walker for Navigation Menu
@@ -240,26 +328,32 @@ class Iran_News_Walker_Nav_Menu extends Walker_Nav_Menu {
  */
 class Iran_News_Mobile_Walker_Nav_Menu extends Walker_Nav_Menu {
     function start_lvl(&$output, $depth = 0, $args = null) {
-        $output .= '<div class="mobile-submenu hidden flex-col pr-4 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg mt-2 mb-2">';
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<div class=\"mobile-submenu hidden flex-col pr-4 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl mt-1 mb-2\">\n";
     }
 
     function end_lvl(&$output, $depth = 0, $args = null) {
-        $output .= '</div>';
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</div>\n";
     }
 
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
         $classes = empty($item->classes) ? array() : (array) $item->classes;
         $has_children = in_array('menu-item-has-children', $classes);
-        $is_active = in_array('current-menu-item', $classes);
+        $is_active = in_array('current-menu-item', $classes) || in_array('current-menu-ancestor', $classes);
 
         if ($has_children) {
-            $output .= '<div class="mobile-submenu-container flex flex-col py-2">';
+            $output .= '<div class="mobile-submenu-container flex flex-col py-1">';
             $output .= '<div class="flex items-center justify-between w-full">';
-            $output .= '<a href="' . esc_url($item->url) . '" class="mobile-nav-item flex-1 ' . ($is_active ? 'mobile-nav-item-active' : '') . '">' . apply_filters('the_title', $item->title, $item->ID) . '</a>';
-            $output .= '<button class="p-4 text-gray-400 hover:text-brand transition-all cursor-pointer"><i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i></button>';
+            $output .= '<a href="' . esc_url($item->url) . '" class="mobile-nav-item flex-1 ' . ($is_active ? 'mobile-nav-item-active font-bold text-brand' : '') . '">' . apply_filters('the_title', $item->title, $item->ID) . '</a>';
+            $output .= '<button class="mobile-submenu-toggle p-4 text-gray-400 hover:text-brand transition-all cursor-pointer"><i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i></button>';
             $output .= '</div>';
         } else {
-            $output .= '<a href="' . esc_url($item->url) . '" class="mobile-nav-item py-4 border-b border-gray-50 dark:border-gray-900 last:border-0 ' . ($is_active ? 'mobile-nav-item-active' : '') . '">' . apply_filters('the_title', $item->title, $item->ID) . '</a>';
+            $class_base = $depth > 0 ? 'mobile-sub-nav-item' : 'mobile-nav-item';
+            $padding = $depth > 0 ? 'py-3' : 'py-4';
+            $border = $depth === 0 ? 'border-b border-gray-50 dark:border-gray-900 last:border-0' : '';
+            
+            $output .= '<a href="' . esc_url($item->url) . '" class="' . $class_base . ' ' . $padding . ' ' . $border . ' ' . ($is_active ? 'mobile-nav-item-active font-bold text-brand' : '') . '">' . apply_filters('the_title', $item->title, $item->ID) . '</a>';
         }
     }
 
@@ -317,3 +411,44 @@ function iran_news_comment_callback($comment, $args, $depth) {
         </div>
     <?php
 }
+
+/**
+ * Advanced SEO & AI Optimization for Header
+ */
+function akhabreiran_advanced_seo_tags() {	
+    // 1. Resource Hints for Performance (Core Web Vitals)
+    ?>
+    <link rel="preconnect" href="<?php echo esc_url( home_url() ); ?>">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    
+    <?php // Preload Critical Font to improve LCP ?>
+    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/arad/AradFDVF.woff2" as="font" type="font/woff2" crossorigin>
+
+    <?php
+    // 2. AI & Crawler Specific Tags
+    // Allow indexing but prevent some AI bots from training if desired (optional)
+    // <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    ?>
+    <meta name="news_keywords" content="<?php echo esc_attr( get_the_tags() ? implode(',', wp_list_pluck(get_the_tags(), 'name')) : get_bloginfo('name') ); ?>">
+
+    <?php
+    // 3. News Specific Structured Data (Speakable)
+    if ( is_single() ) {
+        ?>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "xpath": [
+              "/html/head/title",
+              "//*[@id='post-content']" 
+            ]
+          }
+        }
+        </script>
+        <?php
+    }
+}
+add_action( 'wp_head', 'akhabreiran_advanced_seo_tags', 1 ); // Priority 1 to load before plugin tags
