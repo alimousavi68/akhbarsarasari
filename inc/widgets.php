@@ -35,20 +35,20 @@ class Iran_News_Popular_Posts_Widget extends WP_Widget {
 		) );
 
 		if ( $popular_query->have_posts() ) :
-			echo '<div class="flex flex-col gap-6">';
+			echo '<div class="divide-y divide-gray-200 dark:divide-gray-700">';
 			while ( $popular_query->have_posts() ) : $popular_query->the_post();
 				?>
-				<a href="<?php the_permalink(); ?>" class="group block py-4 border-b border-gray-100 dark:border-gray-800 last:border-0">
-					<div class="flex items-center gap-4 text-right">
-						<div class="w-24 h-16 shrink-0 overflow-hidden rounded-lg">
+				<a href="<?php the_permalink(); ?>" class="group block py-4 first:pt-0 last:pb-0 transition-colors">
+					<div class="flex items-center gap-5 sm:gap-6 text-right">
+						<div class="post-thumb-circle w-14 h-14 sm:w-16 sm:h-16 shrink-0 overflow-hidden rounded-full aspect-square">
 							<?php if ( has_post_thumbnail() ) : ?>
-								<?php the_post_thumbnail( 'iran-thumbnail', array( 'class' => 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' ) ); ?>
+								<?php the_post_thumbnail( 'iran-square', array( 'class' => 'w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500' ) ); ?>
 							<?php else : ?>
-								<img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+								<img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500">
 							<?php endif; ?>
 						</div>
-						<div class="flex-1">
-							<h3 class="text-sm font-bold leading-snug group-hover:text-brand transition-colors line-clamp-2">
+						<div class="flex-1 min-w-0 pr-1">
+							<h3 class="text-xs sm:text-sm font-bold leading-snug text-gray-800 dark:text-gray-200 group-hover:text-brand transition-colors line-clamp-2">
 								<?php the_title(); ?>
 							</h3>
 						</div>
@@ -122,20 +122,20 @@ class Iran_News_Latest_Posts_List_Widget extends WP_Widget {
 
 		if ( $latest_query->have_posts() ) :
 			if ( 'card' === $display_type ) {
-				echo '<div class="flex flex-col gap-1">';
+				echo '<div class="divide-y divide-gray-200 dark:divide-gray-700">';
 				while ( $latest_query->have_posts() ) : $latest_query->the_post();
 					?>
-					<a href="<?php the_permalink(); ?>" class="group block py-4 border-b border-gray-100 dark:border-gray-800 last:border-0">
-						<div class="flex items-center gap-4 text-right">
-							<div class="w-20 h-14 shrink-0 overflow-hidden rounded-lg">
+					<a href="<?php the_permalink(); ?>" class="group block py-3.5 first:pt-0 last:pb-0 transition-colors">
+						<div class="flex items-center gap-4 sm:gap-5 text-right">
+							<div class="post-thumb-circle w-14 h-14 shrink-0 overflow-hidden rounded-full aspect-square">
 								<?php if ( has_post_thumbnail() ) : ?>
-									<?php the_post_thumbnail( 'iran-thumbnail', array( 'class' => 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' ) ); ?>
+									<?php the_post_thumbnail( 'iran-square', array( 'class' => 'w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500' ) ); ?>
 								<?php else : ?>
-									<img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+									<img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500">
 								<?php endif; ?>
 							</div>
-							<div class="flex-1 min-w-0">
-								<h3 class="text-[13px] font-bold leading-snug group-hover:text-brand transition-colors line-clamp-2">
+							<div class="flex-1 min-w-0 pr-1">
+								<h3 class="text-xs sm:text-[13px] font-bold leading-snug group-hover:text-brand transition-colors line-clamp-2">
 									<?php the_title(); ?>
 								</h3>
 							</div>

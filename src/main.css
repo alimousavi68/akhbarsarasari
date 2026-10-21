@@ -407,7 +407,7 @@
   @media print {
     body {
       @apply bg-white text-black p-0 m-0;
-      font-family: serif !important; /* Use print-friendly font */
+      font-family: "Arad", ui-sans-serif, system-ui, sans-serif !important;
     }
 
     header, footer, aside, .print\:hidden, nav, button, .newsletter-box, #back-to-top, .post-actions {
@@ -440,10 +440,13 @@
 
     .print-title {
       display: block !important;
-      font-size: 22pt !important;
+      font-size: 16pt !important;
       font-weight: bold !important;
       margin-bottom: 10px !important;
       line-height: 1.4;
+      max-width: 60%;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
     .print-date {
@@ -490,5 +493,17 @@
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  .post-thumb-circle {
+    @apply rounded-full aspect-square overflow-hidden shrink-0;
+    border-radius: 50% !important;
+    border: none !important;
+  }
+
+  .post-thumb-circle img,
+  .post-thumb-circle .wp-post-image {
+    @apply rounded-full aspect-square object-cover w-full h-full;
+    border-radius: 50% !important;
   }
 }

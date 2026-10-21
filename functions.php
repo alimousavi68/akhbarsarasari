@@ -50,6 +50,7 @@ function iran_news_setup() {
 	register_nav_menus(
 		array(
 			'menu-1' => esc_html__( 'Primary Menu', 'iran' ),
+			'footer-menu' => esc_html__( 'Footer Menu', 'iran' ),
 		)
 	);
 
@@ -216,6 +217,14 @@ function iran_news_scripts() {
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
+	}
+
+	if ( is_front_page() || is_home() ) {
+		wp_enqueue_script( 'iran-news-infinite-scroll', get_template_directory_uri() . '/assets/js/infinite-scroll.js', array( 'lucide' ), '1.0.0', true );
+		wp_localize_script( 'iran-news-infinite-scroll', 'iranAjax', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'iran_news_ajax_nonce' ),
+		) );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'iran_news_scripts' );
@@ -452,3 +461,147 @@ function akhabreiran_advanced_seo_tags() {
     }
 }
 add_action( 'wp_head', 'akhabreiran_advanced_seo_tags', 1 ); // Priority 1 to load before plugin tags
+
+/**
+ * Safe Google Site Name Schema & Open Graph Tags
+ * Automatically bypassed if Rank Math, Yoast SEO or AIOSEO is active.
+ */
+function iran_news_google_site_name_schema() {
+    if ( defined( 'RANK_MATH_FILE' ) || defined( 'WPSEO_VERSION' ) || defined( 'AIOSEO_VERSION' ) ) {
+        return;
+    }
+
+    $site_name = get_bloginfo( 'name' );
+    $site_url  = home_url( '/' );
+
+    // 1. Open Graph Site Name
+    echo '<meta property="og:site_name" content="' . esc_attr( $site_name ) . '">' . "\n";
+
+    // 2. Google WebSite Structured Data (Homepage only)
+    if ( is_front_page() || is_home() ) {
+        $schema = array(
+            '@context'        => 'https://schema.org',
+            '@type'           => 'WebSite',
+            'name'            => $site_name,
+            'alternateName'   => array( 'Vaghaye Zamaneh', 'وقایع زمانه' ),
+            'url'             => $site_url,
+            'potentialAction' => array(
+                '@type'       => 'SearchAction',
+                'target'      => array(
+                    '@type'       => 'EntryPoint',
+                    'urlTemplate' => esc_url( trailingslashit( $site_url ) ) . '?s={search_term_string}',
+                ),
+                'query-input' => 'required name=search_term_string',
+            ),
+        );
+
+        echo '<script type="application/ld+json">' . json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
+    }
+}
+add_action( 'wp_head', 'iran_news_google_site_name_schema', 2 );
+
+/**
+ * Output dynamic CSS styles based on customizer choices.
+ */
+function iran_news_dynamic_css() {
+    $brand = get_theme_mod( 'iran_color_brand', '#cc4345' );
+    $secondary = get_theme_mod( 'iran_color_secondary', '#94a3b8' );
+    $bg = get_theme_mod( 'iran_color_bg', '#ffffff' );
+    $text = get_theme_mod( 'iran_color_text', '#111827' );
+    $header_bg = get_theme_mod( 'iran_color_header_bg', '#ffffff' );
+    $footer_bg = get_theme_mod( 'iran_color_footer_bg', '#1a1a1a' );
+    $footer_text = get_theme_mod( 'iran_color_footer_text', '#9ca3af' );
+
+    ?>
+    <style id="iran-dynamic-colors">
+        :root {
+            --color-brand: <?php echo esc_attr( $brand ); ?> !important;
+            --color-secondary: <?php echo esc_attr( $secondary ); ?> !important;
+        }
+        body:not(.dark) {
+            background-color: <?php echo esc_attr( $bg ); ?> !important;
+            color: <?php echo esc_attr( $text ); ?> !important;
+        }
+        .sticky-nav:not(.dark) {
+            background-color: <?php echo esc_attr( $header_bg ); ?> !important;
+        }
+        footer.bg-\[\#1a1a1a\] {
+            background-color: <?php echo esc_attr( $footer_bg ); ?> !important;
+        }
+        footer, footer p, footer a, footer h3 {
+            color: <?php echo esc_attr( $footer_text ); ?> !important;
+        }
+    </style>
+    <?php
+}
+add_action( 'wp_head', 'iran_news_dynamic_css', 150 );
+
+/**
+ * Enqueue live preview Customizer JS
+ */
+function iran_news_customizer_preview_scripts() {
+    wp_enqueue_script(
+        'iran-customizer-preview',
+        get_template_directory_uri() . '/assets/js/customizer-preview.js',
+        array( 'customize-preview', 'jquery' ),
+        '1.0.0',
+        true
+    );
+}
+add_action( 'customize_preview_init', 'iran_news_customizer_preview_scripts' );
+
+/**
+ * Enqueue customizer controls JS
+ */
+function iran_news_customizer_controls_scripts() {
+    wp_enqueue_script(
+        'iran-customizer-controls',
+        get_template_directory_uri() . '/assets/js/customizer-controls.js',
+        array( 'customize-controls', 'jquery' ),
+        '1.0.0',
+        true
+    );
+}
+add_action( 'customize_controls_enqueue_scripts', 'iran_news_customizer_controls_scripts' );
+
+/**
+ * AJAX Handler for Infinite Scroll (Latest News)
+ */
+function iran_news_load_more_latest_posts() {
+    check_ajax_referer( 'iran_news_ajax_nonce', 'nonce' );
+
+    $paged = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+    $cat   = isset( $_POST['category'] ) ? absint( $_POST['category'] ) : 0;
+    $count = get_theme_mod( 'iran_latest_news_count', 10 );
+
+    $args = array(
+        'post_status'    => 'publish',
+        'paged'          => $paged,
+        'posts_per_page' => $count,
+    );
+
+    if ( $cat > 0 ) {
+        $args['cat'] = $cat;
+    }
+
+    $query = new WP_Query( $args );
+
+    ob_start();
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            get_template_part( 'template-parts/content-latest-news' );
+        }
+        wp_reset_postdata();
+    }
+    $html = ob_get_clean();
+
+    wp_send_json_success( array(
+        'html'      => $html,
+        'max_pages' => (int) $query->max_num_pages,
+        'paged'     => $paged,
+    ) );
+}
+add_action( 'wp_ajax_iran_news_load_more', 'iran_news_load_more_latest_posts' );
+add_action( 'wp_ajax_nopriv_iran_news_load_more', 'iran_news_load_more_latest_posts' );
+

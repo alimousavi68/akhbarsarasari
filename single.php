@@ -142,6 +142,16 @@ if ( have_posts() ) :
                         </div>
                     </footer>
 
+                    <!-- Social Media Section -->
+                    <?php get_template_part( 'template-parts/content', 'social' ); ?>
+
+                    <!-- After Social Media Widget Area -->
+                    <?php if ( is_active_sidebar( 'post-after-social-ad' ) ) : ?>
+                        <div class="post-after-social-widgets">
+                            <?php dynamic_sidebar( 'post-after-social-ad' ); ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- Related News -->
                     <?php
                     $related_count = get_theme_mod( 'iran_related_posts_count', 4 );
@@ -205,11 +215,11 @@ if ( have_posts() ) :
                             <?php while ( $related->have_posts() ) : $related->the_post(); ?>
                             <a href="<?php the_permalink(); ?>" class="group block">
                                 <div class="flex gap-4 items-start">
-                                    <div class="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden">
+                                    <div class="post-thumb-circle w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-full aspect-square overflow-hidden">
                                         <?php if ( has_post_thumbnail() ) : ?>
-                                            <?php the_post_thumbnail( 'iran-square', array( 'class' => 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' ) ); ?>
+                                            <?php the_post_thumbnail( 'iran-square', array( 'class' => 'w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500' ) ); ?>
                                         <?php else : ?>
-                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500">
                                         <?php endif; ?>
                                     </div>
                                     <div class="flex-1">
@@ -227,16 +237,6 @@ if ( have_posts() ) :
                         </div>
                         <div class="mt-12 border-b border-gray-200 dark:border-gray-700"></div>
                     </section>
-                    <?php endif; ?>
-
-                    <!-- Social Media Section -->
-                    <?php get_template_part( 'template-parts/content', 'social' ); ?>
-
-                    <!-- After Social Media Widget Area -->
-                    <?php if ( is_active_sidebar( 'post-after-social-ad' ) ) : ?>
-                        <div class="post-after-social-widgets">
-                            <?php dynamic_sidebar( 'post-after-social-ad' ); ?>
-                        </div>
                     <?php endif; ?>
 
                     <!-- Comments Section -->

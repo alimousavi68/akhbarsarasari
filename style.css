@@ -1,11 +1,11 @@
 /*
-Theme Name: AkhabreIran
+Theme Name: Vaghaye Zamaneh
 Theme URI: https://ihasht.com/
 Author: Ihasht.com
 Author URI: https://ihasht.com/
-Description: A modern Persian news theme based on Vite and Tailwind CSS.
+Description: A modern Persian news theme for Vaghaye Zamaneh based on Vite and Tailwind CSS.
 Version: 1.0.0
-Text Domain: akhabreiran
+Text Domain: vaghayeettefagieh
 */
 
 @font-face {
@@ -139,4 +139,26 @@ Text Domain: akhabreiran
 .mobile-submenu .mobile-sub-nav-item:hover {
     opacity: 1;
 }
+
+/* ==========================================================================
+   Full Circle Featured Images (border-radius: 50%)
+   Sections: Latest News, Popular Posts Widget, Related News, Archive & Search
+   ========================================================================== */
+.post-thumb-circle {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    border: none !important;
+}
+
+.post-thumb-circle img,
+.post-thumb-circle .wp-post-image {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
 

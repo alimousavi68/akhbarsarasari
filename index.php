@@ -10,7 +10,7 @@ get_header();
                 <?php
                 $hero_cat = get_theme_mod( 'iran_hero_category', 0 );
                 $hero_args = array(
-                    'posts_per_page' => 4,
+                    'posts_per_page' => 5,
                     'post_status'    => 'publish',
                 );
 
@@ -24,15 +24,15 @@ get_header();
                     $count = 0;
                     while ( $hero_query->have_posts() ) : $hero_query->the_post();
                         $count++;
-                        if ( $count == 1 ) :
+                        if ( $count === 1 ) :
                 ?>
                 <!-- Main Big Post (Right on Desktop) -->
-                <div class="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[400px] lg:h-[500px]">
+                <div class="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[380px] sm:h-[440px] lg:h-[500px]">
                     <a href="<?php the_permalink(); ?>" class="block h-full">
                         <?php if ( has_post_thumbnail() ) : ?>
                             <?php the_post_thumbnail( 'iran-large', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
                         <?php else : ?>
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         <?php endif; ?>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                         <div class="absolute bottom-0 right-0 p-6 lg:p-8 w-full">
@@ -43,49 +43,33 @@ get_header();
                     </a>
                 </div>
 
-                <!-- Side Sidebar (Left on Desktop) -->
-                <div class="lg:col-span-4 hidden lg:flex flex-col gap-4">
-                    <?php elseif ( $count == 2 ) : ?>
-                    <!-- Top Sidebar Item (Overlay Style) -->
-                    <div class="group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[192px] lg:flex-1">
-                        <a href="<?php the_permalink(); ?>" class="block h-full">
+                <?php if ( $hero_query->post_count > 1 ) : ?>
+                <!-- Side Grid (Left on Desktop: 4 Posts in 2x2 Grid) -->
+                <div class="lg:col-span-4 grid grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
+                <?php endif; ?>
+
+                <?php else : ?>
+                    <!-- Small Hero Item (Posts 2 to 5) -->
+                    <div class="group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-full min-h-[140px]">
+                        <a href="<?php the_permalink(); ?>" class="block h-full relative">
                             <?php if ( has_post_thumbnail() ) : ?>
-                                <?php the_post_thumbnail( 'iran-medium', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
+                                <?php the_post_thumbnail( 'iran-medium', array( 'class' => 'absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
                             <?php else : ?>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             <?php endif; ?>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-                            <div class="absolute bottom-0 right-0 p-5 w-full">
-                                <h2 class="text-base lg:text-lg font-bold text-white leading-tight group-hover:text-brand transition-colors line-clamp-2">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                            <div class="absolute bottom-0 right-0 p-3 sm:p-4 w-full">
+                                <h3 class="text-xs sm:text-sm font-bold text-white leading-snug group-hover:text-brand transition-colors line-clamp-2">
                                     <?php the_title(); ?>
-                                </h2>
+                                </h3>
                             </div>
                         </a>
                     </div>
-
-                    <!-- Bottom Sidebar Items (Horizontal Layout) -->
-                    <div class="grid grid-cols-2 gap-4 h-[192px] lg:flex-1">
-                    <?php elseif ( $count >= 3 ) : ?>
-                        <!-- Small Item -->
-                        <div class="group cursor-pointer relative overflow-hidden rounded-xl shadow-md">
-                            <a href="<?php the_permalink(); ?>" class="block h-full">
-                                <?php if ( has_post_thumbnail() ) : ?>
-                                    <?php the_post_thumbnail( 'iran-medium', array( 'class' => 'absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
-                                <?php else : ?>
-                                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                <?php endif; ?>
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                <div class="absolute bottom-0 right-0 p-3 w-full">
-                                    <h3 class="text-[12px] lg:text-sm font-black text-white leading-snug group-hover:text-brand transition-colors line-clamp-2">
-                                        <?php the_title(); ?>
-                                    </h3>
-                                </div>
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                    <?php endwhile; wp_reset_postdata(); ?>
-                    </div> <!-- end grid-cols-2 -->
+                <?php endif; ?>
+                <?php endwhile; wp_reset_postdata(); ?>
+                <?php if ( $count > 1 ) : ?>
                 </div> <!-- end col-span-4 -->
+                <?php endif; ?>
                 <?php endif; ?>
             </div>
         </section>
@@ -103,60 +87,56 @@ get_header();
                             <?php echo get_theme_mod( 'iran_latest_news_title', '<span class="text-brand">آخرین</span><span class="text-secondary"> اخبار</span>' ); ?>
                         </div>
                     </h2>
+                    <?php
+                    $latest_cat = get_theme_mod( 'iran_latest_news_category', 0 );
+                    $latest_count = get_theme_mod( 'iran_latest_news_count', 10 );
+                    
+                    $latest_args = array(
+                        'posts_per_page' => $latest_count,
+                        'post_status'    => 'publish',
+                    );
+
+                    if ( $latest_cat > 0 ) {
+                        $latest_args['cat'] = $latest_cat;
+                    }
+
+                    $latest_query = new WP_Query( $latest_args );
+                    $max_pages = $latest_query->max_num_pages;
+                    ?>
                     <div id="latest-news-container"
-                        class="flex flex-col min-h-[400px] divide-y divide-gray-200 dark:divide-gray-800">
+                        class="flex flex-col min-h-[400px] divide-y divide-gray-200 dark:divide-gray-800"
+                        data-current-page="1"
+                        data-max-pages="<?php echo esc_attr( $max_pages ); ?>"
+                        data-category="<?php echo esc_attr( $latest_cat ); ?>">
                         <?php
-                        $latest_cat = get_theme_mod( 'iran_latest_news_category', 0 );
-                        $latest_count = get_theme_mod( 'iran_latest_news_count', 10 );
-                        
-                        $latest_args = array(
-                            'posts_per_page' => $latest_count,
-                            'post_status'    => 'publish',
-                        );
-
-                        if ( $latest_cat > 0 ) {
-                            $latest_args['cat'] = $latest_cat;
-                        }
-
-                        $latest_query = new WP_Query( $latest_args );
-
                         if ( $latest_query->have_posts() ) :
                             while ( $latest_query->have_posts() ) : $latest_query->the_post();
-                        ?>
-                        <div class="flex gap-3 py-6 px-0 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all group cursor-pointer animate-fade-in">
-                            <a href="<?php the_permalink(); ?>" class="flex gap-3 w-full">
-                                <div class="w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-lg shrink-0">
-                                    <?php if ( has_post_thumbnail() ) : ?>
-                                        <?php the_post_thumbnail( 'iran-square', array( 'class' => 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' ) ); ?>
-                                    <?php else : ?>
-                                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <?php endif; ?>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-[10px] text-gray-400 mb-1">
-                                        <?php
-                                        $categories = get_the_category();
-                                        if ( ! empty( $categories ) ) {
-                                            echo 'گزارش اختصاصی از حوزه ' . esc_html( $categories[0]->name ) . ':';
-                                        }
-                                        ?>
-                                    </div>
-                                    <h3 class="text-[16px] lg:text-xl font-normal group-hover:text-brand transition-colors line-clamp-3 lg:line-clamp-2 leading-[1.6]">
-                                        <?php the_title(); ?>
-                                    </h3>
-                                    <p class="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed hidden lg:block">
-                                        <?php echo wp_trim_words( get_the_excerpt(), 35 ); ?>
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
-                        <?php
+                                get_template_part( 'template-parts/content-latest-news' );
                             endwhile;
                             wp_reset_postdata();
                         else :
-                            echo '<p>خبری یافت نشد.</p>';
+                            echo '<p class="py-8 text-gray-500 text-center">خبری یافت نشد.</p>';
                         endif;
                         ?>
+                    </div>
+
+                    <!-- Infinite Scroll Sentinel & Status Indicator -->
+                    <div id="latest-news-sentinel" class="py-4 text-center <?php echo ( $max_pages <= 1 ) ? 'hidden' : ''; ?>" aria-live="polite">
+                        <!-- Loading Spinner -->
+                        <div id="latest-news-loader" class="hidden flex items-center justify-center gap-3 py-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            <svg class="animate-spin h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg>
+                            <span>در حال بارگذاری اخبار بیشتر...</span>
+                        </div>
+                        
+                        <!-- End of Content Message -->
+                        <div id="latest-news-end" class="hidden py-4 text-xs font-medium text-gray-400 dark:text-gray-500 flex items-center justify-center gap-2">
+                            <span class="w-8 h-px bg-gray-200 dark:bg-gray-800"></span>
+                            <span>تمام اخبار بارگذاری شدند</span>
+                            <span class="w-8 h-px bg-gray-200 dark:bg-gray-800"></span>
+                        </div>
                     </div>
                 </div>
 

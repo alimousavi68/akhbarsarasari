@@ -30,11 +30,11 @@ get_header();
                     ?>
                             <div class="flex gap-4 py-8 group cursor-pointer animate-fade-in border-b border-gray-100 dark:border-gray-800 last:border-0">
                                 <a href="<?php the_permalink(); ?>" class="flex gap-4 w-full">
-                                    <div class="w-32 h-24 sm:w-48 sm:h-32 overflow-hidden rounded-xl shrink-0 shadow-sm">
+                                    <div class="post-thumb-circle w-24 h-24 sm:w-28 sm:h-28 overflow-hidden rounded-full aspect-square shrink-0 shadow-sm">
                                         <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('iran-thumbnail', array('class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700')); ?>
+                                            <?php the_post_thumbnail('iran-square', array('class' => 'w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-700')); ?>
                                         <?php else : ?>
-                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title(); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.jpg" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-700">
                                         <?php endif; ?>
                                     </div>
                                     <div class="flex-1">

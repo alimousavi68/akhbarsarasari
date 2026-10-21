@@ -320,6 +320,206 @@ function iran_news_customize_register( $wp_customize ) {
             'both'     => __( 'دسته بندی + تگ', 'iran' ),
         ),
     ) );
+    // --- Dynamic Colors Section ---
+    $wp_customize->add_section( 'iran_color_section', array(
+        'title'    => __( 'رنگ‌بندی پویا', 'iran' ),
+        'panel'    => 'iran_theme_options',
+        'priority' => 30,
+    ) );
+
+    // Brand Color
+    $wp_customize->add_setting( 'iran_color_brand', array(
+        'default'           => '#cc4345',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_brand', array(
+        'label'    => __( 'رنگ اصلی / برند', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Secondary Color
+    $wp_customize->add_setting( 'iran_color_secondary', array(
+        'default'           => '#94a3b8',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_secondary', array(
+        'label'    => __( 'رنگ ثانویه', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Body Background
+    $wp_customize->add_setting( 'iran_color_bg', array(
+        'default'           => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_bg', array(
+        'label'    => __( 'رنگ پس‌زمینه سایت', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Body Text
+    $wp_customize->add_setting( 'iran_color_text', array(
+        'default'           => '#111827',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_text', array(
+        'label'    => __( 'رنگ متن سایت', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Header Background
+    $wp_customize->add_setting( 'iran_color_header_bg', array(
+        'default'           => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_header_bg', array(
+        'label'    => __( 'رنگ پس‌زمینه هدر', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Footer Background
+    $wp_customize->add_setting( 'iran_color_footer_bg', array(
+        'default'           => '#1a1a1a',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_footer_bg', array(
+        'label'    => __( 'رنگ پس‌زمینه فوتر', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Footer Text Color
+    $wp_customize->add_setting( 'iran_color_footer_text', array(
+        'default'           => '#9ca3af',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'iran_color_footer_text', array(
+        'label'    => __( 'رنگ متن فوتر', 'iran' ),
+        'section'  => 'iran_color_section',
+    ) ) );
+
+    // Reset Control
+    class Iran_Reset_Colors_Control extends WP_Customize_Control {
+        public $type = 'iran-reset-colors';
+        public function render_content() {
+            ?>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                <button type="button" id="iran-reset-colors-btn" class="button button-secondary" style="width: 100%; text-align: center; justify-content: center;">
+                    <?php _e( 'بازنشانی به تنظیمات کارخانه', 'iran' ); ?>
+                </button>
+            </div>
+            <?php
+        }
+    }
+    $wp_customize->add_setting( 'iran_color_reset', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field'
+    ) );
+    $wp_customize->add_control( new Iran_Reset_Colors_Control( $wp_customize, 'iran_color_reset', array(
+        'section' => 'iran_color_section',
+        'settings' => 'iran_color_reset'
+    ) ) );
+
+
+    // --- Footer Section ---
+    $wp_customize->add_section( 'iran_footer_section', array(
+        'title'    => __( 'مدیریت فوتر', 'iran' ),
+        'panel'    => 'iran_theme_options',
+        'priority' => 35,
+    ) );
+
+    // Show/hide entire footer
+    $wp_customize->add_setting( 'iran_footer_show_all', array(
+        'default'           => true,
+        'sanitize_callback' => 'iran_news_sanitize_checkbox',
+    ) );
+    $wp_customize->add_control( 'iran_footer_show_all', array(
+        'label'    => __( 'فعال بودن نمایش کامل فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'checkbox',
+    ) );
+
+    // Footer Logo
+    $wp_customize->add_setting( 'iran_footer_logo', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'iran_footer_logo', array(
+        'label'    => __( 'لوگوی فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+    ) ) );
+
+    // Show/hide logo
+    $wp_customize->add_setting( 'iran_footer_show_logo', array(
+        'default'           => true,
+        'sanitize_callback' => 'iran_news_sanitize_checkbox',
+    ) );
+    $wp_customize->add_control( 'iran_footer_show_logo', array(
+        'label'    => __( 'نمایش لوگوی فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'checkbox',
+    ) );
+
+    // Footer Title
+    $wp_customize->add_setting( 'iran_footer_title', array(
+        'default'           => 'وقایع زمانه',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+    $wp_customize->add_control( 'iran_footer_title', array(
+        'label'    => __( 'عنوان اصلی فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'text',
+    ) );
+
+    // Footer Description
+    $wp_customize->add_setting( 'iran_footer_description', array(
+        'default'           => 'وقایع زمانه، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.',
+        'sanitize_callback' => 'wp_kses_post',
+    ) );
+    $wp_customize->add_control( 'iran_footer_description', array(
+        'label'    => __( 'توضیحات تکمیلی سایت', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'textarea',
+    ) );
+
+    // Show/hide description
+    $wp_customize->add_setting( 'iran_footer_show_desc', array(
+        'default'           => true,
+        'sanitize_callback' => 'iran_news_sanitize_checkbox',
+    ) );
+    $wp_customize->add_control( 'iran_footer_show_desc', array(
+        'label'    => __( 'نمایش توضیحات فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'checkbox',
+    ) );
+
+    // Show/hide menu
+    $wp_customize->add_setting( 'iran_footer_show_menu', array(
+        'default'           => true,
+        'sanitize_callback' => 'iran_news_sanitize_checkbox',
+    ) );
+    $wp_customize->add_control( 'iran_footer_show_menu', array(
+        'label'    => __( 'نمایش منوی فوتر (دسترسی سریع)', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'checkbox',
+    ) );
+
+    // Show/hide widgets
+    $wp_customize->add_setting( 'iran_footer_show_widgets', array(
+        'default'           => true,
+        'sanitize_callback' => 'iran_news_sanitize_checkbox',
+    ) );
+    $wp_customize->add_control( 'iran_footer_show_widgets', array(
+        'label'    => __( 'نمایش بخش ابزارک‌های فوتر', 'iran' ),
+        'section'  => 'iran_footer_section',
+        'type'     => 'checkbox',
+    ) );
 }
 add_action( 'customize_register', 'iran_news_customize_register' );
 

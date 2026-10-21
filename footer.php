@@ -1,36 +1,75 @@
     <!-- Footer -->
+    <?php if ( get_theme_mod( 'iran_footer_show_all', true ) ) : ?>
     <footer class="bg-[#1a1a1a] text-gray-400 pt-12 pb-4 lg:pb-6 border-t border-gray-800">
         <div class="container-custom">
             <div class="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
                
-                <div class="hidden lg:block max-w-[420px]  gap-2">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="block">
-                        <?php
-                        $custom_logo_id = get_theme_mod( 'custom_logo' );
-                        $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
-                        if ( has_custom_logo() ) {
-                            echo '<img src="' . esc_url( $logo[0] ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
-                        } else {
-                            echo '<img src="' . esc_url( get_template_directory_uri() . '/assets/images/logo.svg' ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
-                        }
-                        ?>
-                    </a>
-                    <p class="text-sm text-gray-400 leading-loose">
-                        <?php bloginfo( 'description' ); ?>
-                    </p>
-                    <p>
-                        اخبار ایران، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.
-                    </p>
+                <?php if ( get_theme_mod( 'iran_footer_show_logo', true ) || get_theme_mod( 'iran_footer_show_desc', true ) ) : ?>
+                <div class="hidden lg:flex flex-col lg:flex-1 gap-4">
+                    <?php if ( get_theme_mod( 'iran_footer_show_logo', true ) ) : ?>
+                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="block">
+                            <?php
+                            $footer_logo = get_theme_mod( 'iran_footer_logo' );
+                            if ( ! empty( $footer_logo ) ) {
+                                echo '<img src="' . esc_url( $footer_logo ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
+                            } else {
+                                $custom_logo_id = get_theme_mod( 'custom_logo' );
+                                $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+                                if ( has_custom_logo() ) {
+                                    echo '<img src="' . esc_url( $logo[0] ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
+                                } else {
+                                    echo '<img src="' . esc_url( get_template_directory_uri() . '/assets/images/logo.svg' ) . '" alt="' . get_bloginfo( 'name' ) . '" class="h-16 w-auto">';
+                                }
+                            }
+                            ?>
+                        </a>
+                    <?php endif; ?>
+                    
+                    <?php if ( get_theme_mod( 'iran_footer_show_desc', true ) ) : ?>
+                        <h3 class="text-white font-medium text-lg">
+                            <?php echo esc_html( get_theme_mod( 'iran_footer_title', 'وقایع زمانه' ) ); ?>
+                        </h3>
+                        <p class="text-sm text-gray-400 leading-loose">
+                            <?php echo wp_kses_post( get_theme_mod( 'iran_footer_description', 'وقایع زمانه، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.' ) ); ?>
+                        </p>
+                    <?php endif; ?>
                 </div>
-                <?php if ( is_active_sidebar( 'footer-sidebar' ) ) : ?>
-                    <?php dynamic_sidebar( 'footer-sidebar' ); ?>
+                <?php endif; ?>
+
+                <!-- Footer Menu Column -->
+                <?php if ( get_theme_mod( 'iran_footer_show_menu', true ) ) : ?>
+                <div class="hidden lg:block lg:flex-1">
+                    <h3 class="text-white font-medium text-lg mb-4">دسترسی سریع</h3>
+                    <?php
+                    if ( has_nav_menu( 'footer-menu' ) ) {
+                        wp_nav_menu(
+                            array(
+                                'theme_location' => 'footer-menu',
+                                'container'      => false,
+                                'menu_class'     => 'flex flex-col space-y-3 text-sm text-gray-400 [&_a]:hover:text-brand [&_a]:transition-colors',
+                                'fallback_cb'    => false,
+                            )
+                        );
+                    } else {
+                        echo '<p class="text-xs text-gray-500">فهرست "منوی فوتر" را از بخش نمایش > فهرست‌ها تنظیم کنید.</p>';
+                    }
+                    ?>
+                </div>
+                <?php endif; ?>
+
+                <!-- Footer Sidebar Column -->
+                <?php if ( get_theme_mod( 'iran_footer_show_widgets', true ) && is_active_sidebar( 'footer-sidebar' ) ) : ?>
+                    <div class="w-full lg:flex-1">
+                        <?php dynamic_sidebar( 'footer-sidebar' ); ?>
+                    </div>
                 <?php endif; ?>
             </div>
             <div class="pt-4 mt-4 border-t border-gray-800 text-center text-xs text-gray-500">
-                <p>طراحی و توسعه: <a href="#" class="text-brand hover:underline transition-all">هشت بهشت</a></p>
+                <p>طراحی و توسعه: <a href="http://ihasht.ir/" class="text-brand hover:underline transition-all">هشت بهشت</a></p>
             </div>
         </div>
     </footer>
+    <?php endif; ?>
 
    
     <!-- Mobile Sidebar Menu -->
