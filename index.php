@@ -88,8 +88,10 @@ get_header();
                         </div>
                     </h2>
                     <?php
-                    $latest_cat = get_theme_mod( 'iran_latest_news_category', 0 );
+                    $latest_cat  = get_theme_mod( 'iran_latest_news_category', 0 );
                     $latest_count = get_theme_mod( 'iran_latest_news_count', 10 );
+                    $scroll_mode  = get_theme_mod( 'iran_infinite_scroll_mode', 'button_after_n' );
+                    $auto_pages   = get_theme_mod( 'iran_infinite_scroll_auto_pages', 3 );
                     
                     $latest_args = array(
                         'posts_per_page' => $latest_count,
@@ -101,13 +103,15 @@ get_header();
                     }
 
                     $latest_query = new WP_Query( $latest_args );
-                    $max_pages = $latest_query->max_num_pages;
+                    $max_pages    = $latest_query->max_num_pages;
                     ?>
                     <div id="latest-news-container"
                         class="flex flex-col min-h-[400px] divide-y divide-gray-200 dark:divide-gray-800"
                         data-current-page="1"
                         data-max-pages="<?php echo esc_attr( $max_pages ); ?>"
-                        data-category="<?php echo esc_attr( $latest_cat ); ?>">
+                        data-category="<?php echo esc_attr( $latest_cat ); ?>"
+                        data-scroll-mode="<?php echo esc_attr( $scroll_mode ); ?>"
+                        data-auto-pages="<?php echo esc_attr( $auto_pages ); ?>">
                         <?php
                         if ( $latest_query->have_posts() ) :
                             while ( $latest_query->have_posts() ) : $latest_query->the_post();
@@ -121,7 +125,17 @@ get_header();
                     </div>
 
                     <!-- Infinite Scroll Sentinel & Status Indicator -->
-                    <div id="latest-news-sentinel" class="py-4 text-center <?php echo ( $max_pages <= 1 ) ? 'hidden' : ''; ?>" aria-live="polite">
+                    <div id="latest-news-sentinel" class="py-6 text-center <?php echo ( $max_pages <= 1 ) ? 'hidden' : ''; ?>" aria-live="polite">
+                        <!-- Load More Button (Scenario 2: Button after N pages) -->
+                        <button id="latest-news-load-more-btn"
+                            type="button"
+                            class="hidden inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white hover:bg-brand hover:border-brand hover:text-white dark:bg-gray-900 dark:hover:bg-brand dark:hover:border-brand text-gray-700 dark:text-gray-300 font-medium text-sm transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group">
+                            <span>مشاهده اخبار بیشتر</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
                         <!-- Loading Spinner -->
                         <div id="latest-news-loader" class="hidden flex items-center justify-center gap-3 py-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                             <svg class="animate-spin h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

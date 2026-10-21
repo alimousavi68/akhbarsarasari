@@ -96,6 +96,36 @@ function iran_news_customize_register( $wp_customize ) {
         'choices'  => $cat_options, // Using the same categories list as hero
     ) );
 
+    // Setting: Infinite Scroll Mode
+    $wp_customize->add_setting( 'iran_infinite_scroll_mode', array(
+        'default'           => 'button_after_n',
+        'sanitize_callback' => 'iran_news_sanitize_scroll_mode',
+    ) );
+
+    $wp_customize->add_control( 'iran_infinite_scroll_mode', array(
+        'label'    => __( 'حالت بارگذاری اخبار بیشتر (Infinite Scroll)', 'iran' ),
+        'section'  => 'iran_latest_news_section',
+        'type'     => 'select',
+        'choices'  => array(
+            'infinite'       => __( 'اسکرول بی‌نهایت خودکار (پیوسته)', 'iran' ),
+            'button_after_n' => __( 'اسکرول تا تعداد مشخصی صفحه و سپس دکمه', 'iran' ),
+        ),
+    ) );
+
+    // Setting: Auto Scroll Pages Count
+    $wp_customize->add_setting( 'iran_infinite_scroll_auto_pages', array(
+        'default'           => 3,
+        'sanitize_callback' => 'absint',
+    ) );
+
+    $wp_customize->add_control( 'iran_infinite_scroll_auto_pages', array(
+        'label'       => __( 'تعداد صفحات اسکرول خودکار قبل از دکمه', 'iran' ),
+        'description' => __( 'در صورت انتخاب حالت دوم، پس از لود این تعداد صفحه، دکمه «مشاهده اخبار بیشتر» نمایش داده می‌شود.', 'iran' ),
+        'section'     => 'iran_latest_news_section',
+        'type'        => 'number',
+        'input_attrs' => array( 'min' => 1, 'max' => 20, 'step' => 1 ),
+    ) );
+
     // --- Social Networks Section ---
     $wp_customize->add_section( 'iran_social_section', array(
         'title'    => __( 'مدیریت شبکه‌های اجتماعی', 'iran' ),
@@ -571,4 +601,12 @@ function iran_news_allow_svg_uploads( $mimes ) {
     return $mimes;
 }
 add_filter( 'upload_mimes', 'iran_news_allow_svg_uploads' );
+
+/**
+ * Sanitize Infinite Scroll Mode
+ */
+function iran_news_sanitize_scroll_mode( $input ) {
+    $valid = array( 'infinite', 'button_after_n' );
+    return in_array( $input, $valid, true ) ? $input : 'button_after_n';
+}
 

@@ -1,11 +1,12 @@
 /**
  * Infinite Scroll for Latest News Section
- * High-performance vanilla JavaScript using IntersectionObserver API
+ * Supports both pure Infinite Scroll and Hybrid (Auto-scroll until N pages, then Load More button)
  */
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('latest-news-container');
     const sentinel = document.getElementById('latest-news-sentinel');
     const loader = document.getElementById('latest-news-loader');
+    const loadMoreBtn = document.getElementById('latest-news-load-more-btn');
     const endMsg = document.getElementById('latest-news-end');
 
     if (!container || !sentinel) return;
@@ -13,9 +14,36 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = parseInt(container.getAttribute('data-current-page') || '1', 10);
     let maxPages = parseInt(container.getAttribute('data-max-pages') || '1', 10);
     const category = parseInt(container.getAttribute('data-category') || '0', 10);
+    const scrollMode = container.getAttribute('data-scroll-mode') || 'button_after_n';
+    const autoPages = parseInt(container.getAttribute('data-auto-pages') || '3', 10);
     let isLoading = false;
+    let observer = null;
 
-    // If there is only 1 page or none, show end message immediately and exit
+    // Helper: update UI states
+    function showLoader() {
+        if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+        if (loader) loader.classList.remove('hidden');
+    }
+
+    function hideLoader() {
+        if (loader) loader.classList.add('hidden');
+    }
+
+    function showButton() {
+        hideLoader();
+        if (loadMoreBtn && currentPage < maxPages) {
+            loadMoreBtn.classList.remove('hidden');
+        }
+    }
+
+    function showEnd() {
+        hideLoader();
+        if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+        if (endMsg) endMsg.classList.remove('hidden');
+        if (observer) observer.disconnect();
+    }
+
+    // Check if only 1 page or none exists
     if (currentPage >= maxPages) {
         sentinel.classList.add('hidden');
         return;
@@ -25,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isLoading || currentPage >= maxPages) return;
 
         isLoading = true;
-        if (loader) loader.classList.remove('hidden');
+        showLoader();
 
         const nextPage = currentPage + 1;
         const formData = new FormData();
@@ -47,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.success && data.data && data.data.html) {
-                // Parse and append new posts
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = data.data.html;
 
@@ -63,47 +90,68 @@ document.addEventListener('DOMContentLoaded', () => {
                     container.setAttribute('data-max-pages', maxPages);
                 }
 
-                // Re-initialize any Lucide icons if present
+                // Re-initialize Lucide icons
                 if (window.lucide && typeof window.lucide.createIcons === 'function') {
                     window.lucide.createIcons();
                 }
 
-                // Check if all pages are loaded
+                // Decide next step based on state
                 if (currentPage >= maxPages) {
-                    observer.unobserve(sentinel);
-                    if (loader) loader.classList.add('hidden');
-                    if (endMsg) endMsg.classList.remove('hidden');
+                    showEnd();
+                } else if (scrollMode === 'button_after_n' && currentPage >= autoPages) {
+                    if (observer) observer.unobserve(sentinel);
+                    showButton();
+                } else {
+                    hideLoader();
                 }
             } else {
-                // No more posts returned
-                observer.unobserve(sentinel);
-                if (loader) loader.classList.add('hidden');
-                if (endMsg) endMsg.classList.remove('hidden');
+                showEnd();
             }
         } catch (error) {
             console.error('Error loading more news:', error);
+            hideLoader();
+            if (scrollMode === 'button_after_n' && currentPage >= autoPages) {
+                showButton();
+            }
         } finally {
             isLoading = false;
-            if (loader && currentPage < maxPages) {
-                loader.classList.add('hidden');
-            }
         }
     }
 
-    // Set up IntersectionObserver with threshold and rootMargin to preload smoothly
-    const observerOptions = {
-        root: null,
-        rootMargin: '200px 0px', // Preload when 200px before reaching sentinel
-        threshold: 0.1,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting && !isLoading && currentPage < maxPages) {
+    // Setup Click listener on Load More button
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            if (!isLoading) {
                 loadMoreNews();
             }
         });
-    }, observerOptions);
+    }
 
-    observer.observe(sentinel);
+    // Setup IntersectionObserver for auto-scroll
+    const shouldObserve = (scrollMode === 'infinite') || (scrollMode === 'button_after_n' && currentPage < autoPages);
+
+    if (shouldObserve) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '250px 0px',
+            threshold: 0.1,
+        };
+
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting && !isLoading && currentPage < maxPages) {
+                    if (scrollMode === 'button_after_n' && currentPage >= autoPages) {
+                        observer.unobserve(sentinel);
+                        showButton();
+                    } else {
+                        loadMoreNews();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(sentinel);
+    } else if (scrollMode === 'button_after_n' && currentPage >= autoPages && currentPage < maxPages) {
+        showButton();
+    }
 });
