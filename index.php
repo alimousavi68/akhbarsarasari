@@ -24,6 +24,10 @@ get_header();
 
                 $hero_query = new WP_Query( $hero_args );
 
+                // Check if side grid actually has any posts to render
+                $has_side_posts = $hero_query->post_count > 1 && ( $hero_posts_desktop > 1 || $hero_posts_mobile > 1 );
+                $main_col_span  = $hero_posts_desktop <= 1 ? 'lg:col-span-12' : 'lg:col-span-8';
+
                 if ( $hero_query->have_posts() ) :
                     $count = 0;
                     while ( $hero_query->have_posts() ) : $hero_query->the_post();
@@ -42,7 +46,7 @@ get_header();
                         if ( $count === 1 ) :
                 ?>
                 <!-- Main Big Post (Right on Desktop) -->
-                <div class="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[380px] sm:h-[440px] lg:h-[500px] <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+                <div class="<?php echo esc_attr( $main_col_span ); ?> group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[380px] sm:h-[440px] lg:h-[500px] <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
                     <a href="<?php the_permalink(); ?>" class="block h-full">
                         <?php if ( has_post_thumbnail() ) : ?>
                             <?php the_post_thumbnail( 'iran-large', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
@@ -58,9 +62,19 @@ get_header();
                     </a>
                 </div>
 
-                <?php if ( $hero_query->post_count > 1 ) : ?>
+                <?php 
+                if ( $has_side_posts ) : 
+                    $side_visibility = '';
+                    if ( $hero_posts_desktop <= 1 ) {
+                        $side_visibility = 'grid lg:hidden';
+                    } elseif ( $hero_posts_mobile <= 1 ) {
+                        $side_visibility = 'hidden lg:grid';
+                    } else {
+                        $side_visibility = 'grid';
+                    }
+                ?>
                 <!-- Side Grid (Left on Desktop) -->
-                <div class="<?php echo ( $hero_posts_mobile <= 1 ) ? 'hidden lg:grid' : 'grid'; ?> lg:col-span-4 grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
+                <div class="<?php echo esc_attr( $side_visibility ); ?> lg:col-span-4 grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
                 <?php endif; ?>
 
                 <?php else : ?>
@@ -82,7 +96,7 @@ get_header();
                     </div>
                 <?php endif; ?>
                 <?php endwhile; wp_reset_postdata(); ?>
-                <?php if ( $count > 1 ) : ?>
+                <?php if ( $has_side_posts ) : ?>
                 </div> <!-- end col-span-4 -->
                 <?php endif; ?>
                 <?php endif; ?>
