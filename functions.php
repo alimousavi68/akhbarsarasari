@@ -605,3 +605,86 @@ function iran_news_load_more_latest_posts() {
 add_action( 'wp_ajax_iran_news_load_more', 'iran_news_load_more_latest_posts' );
 add_action( 'wp_ajax_nopriv_iran_news_load_more', 'iran_news_load_more_latest_posts' );
 
+/**
+ * Output Custom Header Scripts (Instant or Deferred)
+ */
+function iran_news_output_header_scripts() {
+    $scripts = get_theme_mod( 'iran_header_scripts', '' );
+    if ( empty( trim( $scripts ) ) ) {
+        return;
+    }
+
+    $mode = get_theme_mod( 'iran_header_scripts_mode', 'instant' );
+
+    echo "\n<!-- Custom Header Scripts -->\n";
+    if ( 'defer' === $mode ) {
+        ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var template = document.createElement('template');
+            template.innerHTML = <?php echo json_encode( $scripts ); ?>;
+            var scripts = template.content.querySelectorAll('script');
+            if (scripts.length > 0) {
+                scripts.forEach(function(s) {
+                    var newScript = document.createElement('script');
+                    Array.from(s.attributes).forEach(function(attr) {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    newScript.appendChild(document.createTextNode(s.innerHTML));
+                    document.head.appendChild(newScript);
+                });
+            } else {
+                document.head.appendChild(template.content);
+            }
+        });
+        </script>
+        <?php
+    } else {
+        echo $scripts . "\n";
+    }
+    echo "<!-- End Custom Header Scripts -->\n";
+}
+add_action( 'wp_head', 'iran_news_output_header_scripts', 999 );
+
+/**
+ * Output Custom Footer Scripts (Instant or Deferred)
+ */
+function iran_news_output_footer_scripts() {
+    $scripts = get_theme_mod( 'iran_footer_scripts', '' );
+    if ( empty( trim( $scripts ) ) ) {
+        return;
+    }
+
+    $mode = get_theme_mod( 'iran_footer_scripts_mode', 'instant' );
+
+    echo "\n<!-- Custom Footer Scripts -->\n";
+    if ( 'defer' === $mode ) {
+        ?>
+        <script>
+        window.addEventListener('load', function() {
+            var template = document.createElement('template');
+            template.innerHTML = <?php echo json_encode( $scripts ); ?>;
+            var scripts = template.content.querySelectorAll('script');
+            if (scripts.length > 0) {
+                scripts.forEach(function(s) {
+                    var newScript = document.createElement('script');
+                    Array.from(s.attributes).forEach(function(attr) {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    newScript.appendChild(document.createTextNode(s.innerHTML));
+                    document.body.appendChild(newScript);
+                });
+            } else {
+                document.body.appendChild(template.content);
+            }
+        });
+        </script>
+        <?php
+    } else {
+        echo $scripts . "\n";
+    }
+    echo "<!-- End Custom Footer Scripts -->\n";
+}
+add_action( 'wp_footer', 'iran_news_output_footer_scripts', 999 );
+
+

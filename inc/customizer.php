@@ -586,6 +586,82 @@ function iran_news_customize_register( $wp_customize ) {
         'section'  => 'iran_footer_section',
         'type'     => 'checkbox',
     ) );
+
+    // --- Custom Scripts Section ---
+    $wp_customize->add_section( 'iran_custom_scripts_section', array(
+        'title'       => __( 'اسکریپت‌ها و کدهای سفارشی', 'iran' ),
+        'description' => __( 'تزریق کدهای HTML/JS به هدر و فوتر به دو صورت فوری یا تعلیقی (برای بهینه‌سازی سرعت و امتیاز Core Web Vitals).', 'iran' ),
+        'panel'       => 'iran_theme_options',
+        'priority'    => 40,
+    ) );
+
+    // Header Scripts Code
+    $wp_customize->add_setting( 'iran_header_scripts', array(
+        'default'           => '',
+        'sanitize_callback' => 'iran_news_sanitize_raw_code',
+    ) );
+
+    $wp_customize->add_control( 'iran_header_scripts', array(
+        'label'       => __( 'کدهای هدر (درون تگ head)', 'iran' ),
+        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ <script> یا <meta> وارد کنید.', 'iran' ),
+        'section'     => 'iran_custom_scripts_section',
+        'type'        => 'textarea',
+        'input_attrs' => array(
+            'rows'        => 6,
+            'placeholder' => '<script>' . "\n" . '// header script' . "\n" . '</script>',
+            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px;',
+        ),
+    ) );
+
+    // Header Scripts Execution Mode
+    $wp_customize->add_setting( 'iran_header_scripts_mode', array(
+        'default'           => 'instant',
+        'sanitize_callback' => 'iran_news_sanitize_script_mode',
+    ) );
+
+    $wp_customize->add_control( 'iran_header_scripts_mode', array(
+        'label'       => __( 'نحوه اجرای کدهای هدر', 'iran' ),
+        'section'     => 'iran_custom_scripts_section',
+        'type'        => 'select',
+        'choices'     => array(
+            'instant' => __( 'فوری (معمولی در زمان پردازش head)', 'iran' ),
+            'defer'   => __( 'تعلیقی (پس از رویداد DOMContentLoaded)', 'iran' ),
+        ),
+    ) );
+
+    // Footer Scripts Code
+    $wp_customize->add_setting( 'iran_footer_scripts', array(
+        'default'           => '',
+        'sanitize_callback' => 'iran_news_sanitize_raw_code',
+    ) );
+
+    $wp_customize->add_control( 'iran_footer_scripts', array(
+        'label'       => __( 'کدهای فوتر (پیش از بسته شدن تگ body)', 'iran' ),
+        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ <script> وارد کنید.', 'iran' ),
+        'section'     => 'iran_custom_scripts_section',
+        'type'        => 'textarea',
+        'input_attrs' => array(
+            'rows'        => 6,
+            'placeholder' => '<script>' . "\n" . '// footer script' . "\n" . '</script>',
+            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px;',
+        ),
+    ) );
+
+    // Footer Scripts Execution Mode
+    $wp_customize->add_setting( 'iran_footer_scripts_mode', array(
+        'default'           => 'instant',
+        'sanitize_callback' => 'iran_news_sanitize_script_mode',
+    ) );
+
+    $wp_customize->add_control( 'iran_footer_scripts_mode', array(
+        'label'       => __( 'نحوه اجرای کدهای فوتر', 'iran' ),
+        'section'     => 'iran_custom_scripts_section',
+        'type'        => 'select',
+        'choices'     => array(
+            'instant' => __( 'فوری (معمولی در زمان لود فوتر)', 'iran' ),
+            'defer'   => __( 'تعلیقی (پس از لود کامل صفحه window.load)', 'iran' ),
+        ),
+    ) );
 }
 add_action( 'customize_register', 'iran_news_customize_register' );
 
@@ -644,5 +720,24 @@ add_filter( 'upload_mimes', 'iran_news_allow_svg_uploads' );
 function iran_news_sanitize_scroll_mode( $input ) {
     $valid = array( 'infinite', 'button_after_n' );
     return in_array( $input, $valid, true ) ? $input : 'button_after_n';
+}
+
+/**
+ * Sanitize Script Execution Mode
+ */
+function iran_news_sanitize_script_mode( $input ) {
+    $valid = array( 'instant', 'defer' );
+    return in_array( $input, $valid, true ) ? $input : 'instant';
+}
+
+/**
+ * Sanitize Raw Script / HTML Code
+ * Permits scripts, styles and meta tags for users who can edit theme options.
+ */
+function iran_news_sanitize_raw_code( $input ) {
+    if ( current_user_can( 'unfiltered_html' ) ) {
+        return $input;
+    }
+    return wp_kses_post( $input );
 }
 
