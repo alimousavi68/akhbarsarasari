@@ -603,13 +603,13 @@ function iran_news_customize_register( $wp_customize ) {
 
     $wp_customize->add_control( 'iran_header_scripts', array(
         'label'       => __( 'کدهای هدر (درون تگ head)', 'iran' ),
-        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ <script> یا <meta> وارد کنید.', 'iran' ),
+        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ &lt;script&gt; یا &lt;meta&gt; وارد کنید.', 'iran' ),
         'section'     => 'iran_custom_scripts_section',
         'type'        => 'textarea',
         'input_attrs' => array(
             'rows'        => 6,
-            'placeholder' => '<script>' . "\n" . '// header script' . "\n" . '</script>',
-            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px;',
+            'placeholder' => '<script> ... </script>',
+            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px; width: 100%; min-height: 120px;',
         ),
     ) );
 
@@ -637,13 +637,13 @@ function iran_news_customize_register( $wp_customize ) {
 
     $wp_customize->add_control( 'iran_footer_scripts', array(
         'label'       => __( 'کدهای فوتر (پیش از بسته شدن تگ body)', 'iran' ),
-        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ <script> وارد کنید.', 'iran' ),
+        'description' => __( 'کدها یا اسکریپت‌ها را به همراه تگ &lt;script&gt; وارد کنید.', 'iran' ),
         'section'     => 'iran_custom_scripts_section',
         'type'        => 'textarea',
         'input_attrs' => array(
             'rows'        => 6,
-            'placeholder' => '<script>' . "\n" . '// footer script' . "\n" . '</script>',
-            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px;',
+            'placeholder' => '<script> ... </script>',
+            'style'       => 'direction: ltr; font-family: monospace; font-size: 12px; width: 100%; min-height: 120px;',
         ),
     ) );
 
