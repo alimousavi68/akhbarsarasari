@@ -26,7 +26,7 @@ get_header();
 
                 // Check if side grid actually has any posts to render
                 $has_side_posts = $hero_query->post_count > 1 && ( $hero_posts_desktop > 1 || $hero_posts_mobile > 1 );
-                $main_col_span  = $hero_posts_desktop <= 1 ? 'lg:col-span-12' : 'lg:col-span-8';
+                $main_col_span  = ( $hero_posts_desktop <= 1 || $hero_query->post_count <= 1 ) ? 'lg:col-span-12' : 'lg:col-span-8';
 
                 if ( $hero_query->have_posts() ) :
                     $count = 0;
