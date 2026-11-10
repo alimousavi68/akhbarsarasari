@@ -498,7 +498,7 @@ function iran_news_customize_register( $wp_customize ) {
 
     // Footer Title
     $wp_customize->add_setting( 'iran_footer_title', array(
-        'default'           => 'وقایع زمانه',
+        'default'           => 'اخبار سراسری',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'iran_footer_title', array(
@@ -509,7 +509,7 @@ function iran_news_customize_register( $wp_customize ) {
 
     // Footer Description
     $wp_customize->add_setting( 'iran_footer_description', array(
-        'default'           => 'وقایع زمانه، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.',
+        'default'           => 'اخبار سراسری، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.',
         'sanitize_callback' => 'wp_kses_post',
     ) );
     $wp_customize->add_control( 'iran_footer_description', array(

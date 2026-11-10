@@ -27,10 +27,10 @@
                     
                     <?php if ( get_theme_mod( 'iran_footer_show_desc', true ) ) : ?>
                         <h3 class="text-white font-medium text-lg">
-                            <?php echo esc_html( get_theme_mod( 'iran_footer_title', 'وقایع زمانه' ) ); ?>
+                            <?php echo esc_html( get_theme_mod( 'iran_footer_title', 'اخبار سراسری' ) ); ?>
                         </h3>
                         <p class="text-sm text-gray-400 leading-loose">
-                            <?php echo wp_kses_post( get_theme_mod( 'iran_footer_description', 'وقایع زمانه، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.' ) ); ?>
+                            <?php echo wp_kses_post( get_theme_mod( 'iran_footer_description', 'اخبار سراسری، مرجع مستقل و پیشرو در ارائه تازه‌ترین خبرها و تحلیل‌های روز ایران و جهان. ما متعهد به ارائه اخبار دقیق و بی‌طرفانه هستیم.' ) ); ?>
                         </p>
                     <?php endif; ?>
                 </div>

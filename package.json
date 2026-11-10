@@ -1,7 +1,7 @@
 {
   "name": "iran-news-theme",
   "version": "1.0.0",
-  "description": "WordPress theme for Vaghaye Zamaneh",
+  "description": "WordPress theme for Akhbar Sarasari",
   "main": "index.php",
   "scripts": {
     "dev": "tailwindcss -i ./src/main.css -o ./assets/css/main.css --watch",

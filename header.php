@@ -26,8 +26,8 @@
                             <span class="text-gray-900 dark:text-white"><?php echo esc_html( $iran_news_logo['site_name'] ); ?></span>
                         <?php endif; ?>
                     </div>
-                    <div class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-[0.2em]">news and analytics
-                    </div>
+                    <!-- <div class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-[0.2em]">news and analytics
+                    </div> -->
                 </a>
 
                 <!-- Left: Date, Time & Icons -->
@@ -86,8 +86,8 @@
                         <span class="text-gray-900 dark:text-white"><?php echo esc_html( $iran_news_logo['site_name'] ); ?></span>
                     <?php endif; ?>
                 </div>
-                <div class="text-[7px] font-bold text-gray-400 mt-0.5 uppercase tracking-[0.1em]">news and analytics
-                </div>
+                <!-- <div class="text-[7px] font-bold text-gray-400 mt-0.5 uppercase tracking-[0.1em]">news and analytics
+                </div> -->
             </a>
             <div class="flex items-center gap-3">
                 <button id="search-btn-mobile" class="text-gray-400 hover:text-brand transition-colors cursor-pointer"

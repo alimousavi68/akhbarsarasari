@@ -483,7 +483,7 @@ function iran_news_google_site_name_schema() {
             '@context'        => 'https://schema.org',
             '@type'           => 'WebSite',
             'name'            => $site_name,
-            'alternateName'   => array( 'Vaghaye Zamaneh', 'وقایع زمانه' ),
+            'alternateName'   => array( 'Akhbar Sarasari', 'اخبار سراسری' ),
             'url'             => $site_url,
             'potentialAction' => array(
                 '@type'       => 'SearchAction',
