@@ -60,7 +60,7 @@ get_header();
 
                 <?php if ( $hero_query->post_count > 1 ) : ?>
                 <!-- Side Grid (Left on Desktop) -->
-                <div class="lg:col-span-4 grid grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
+                <div class="<?php echo ( $hero_posts_mobile <= 1 ) ? 'hidden lg:grid' : 'grid'; ?> lg:col-span-4 grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
                 <?php endif; ?>
 
                 <?php else : ?>
