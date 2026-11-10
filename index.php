@@ -9,8 +9,12 @@ get_header();
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 <?php
                 $hero_cat = get_theme_mod( 'iran_hero_category', 0 );
+                $hero_posts_desktop = (int) get_theme_mod( 'iran_hero_posts_desktop', 5 );
+                $hero_posts_mobile  = (int) get_theme_mod( 'iran_hero_posts_mobile', 3 );
+                $max_hero_posts     = max( $hero_posts_desktop, $hero_posts_mobile, 1 );
+
                 $hero_args = array(
-                    'posts_per_page' => 5,
+                    'posts_per_page' => $max_hero_posts,
                     'post_status'    => 'publish',
                 );
 
@@ -24,10 +28,21 @@ get_header();
                     $count = 0;
                     while ( $hero_query->have_posts() ) : $hero_query->the_post();
                         $count++;
+
+                        // Handle responsive visibility based on customizer counts
+                        $classes = array();
+                        if ( $count > $hero_posts_desktop && $count > $hero_posts_mobile ) {
+                            continue; // Skip rendering if it exceeds both
+                        } elseif ( $count > $hero_posts_desktop ) {
+                            $classes[] = 'lg:hidden'; // Only visible on mobile/tablet
+                        } elseif ( $count > $hero_posts_mobile ) {
+                            $classes[] = 'hidden lg:block'; // Only visible on desktop
+                        }
+
                         if ( $count === 1 ) :
                 ?>
                 <!-- Main Big Post (Right on Desktop) -->
-                <div class="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[380px] sm:h-[440px] lg:h-[500px]">
+                <div class="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-[380px] sm:h-[440px] lg:h-[500px] <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
                     <a href="<?php the_permalink(); ?>" class="block h-full">
                         <?php if ( has_post_thumbnail() ) : ?>
                             <?php the_post_thumbnail( 'iran-large', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
@@ -36,7 +51,7 @@ get_header();
                         <?php endif; ?>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                         <div class="absolute bottom-0 right-0 p-6 lg:p-8 w-full">
-                            <h1 class="text-xl lg:text-3xl font-black text-white leading-tight group-hover:text-brand transition-colors">
+                            <h1 class="text-xl lg:text-3xl font-black text-white leading-tight">
                                 <?php the_title(); ?>
                             </h1>
                         </div>
@@ -44,13 +59,13 @@ get_header();
                 </div>
 
                 <?php if ( $hero_query->post_count > 1 ) : ?>
-                <!-- Side Grid (Left on Desktop: 4 Posts in 2x2 Grid) -->
+                <!-- Side Grid (Left on Desktop) -->
                 <div class="lg:col-span-4 grid grid-cols-2 gap-3 sm:gap-4 h-[380px] sm:h-[440px] lg:h-[500px]">
                 <?php endif; ?>
 
                 <?php else : ?>
-                    <!-- Small Hero Item (Posts 2 to 5) -->
-                    <div class="group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-full min-h-[140px]">
+                    <!-- Small Hero Item (Posts 2+) -->
+                    <div class="group cursor-pointer relative overflow-hidden rounded-xl shadow-md h-full min-h-[140px] <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
                         <a href="<?php the_permalink(); ?>" class="block h-full relative">
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <?php the_post_thumbnail( 'iran-medium', array( 'class' => 'absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' ) ); ?>
@@ -59,7 +74,7 @@ get_header();
                             <?php endif; ?>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                             <div class="absolute bottom-0 right-0 p-3 sm:p-4 w-full">
-                                <h3 class="text-xs sm:text-sm font-bold text-white leading-snug group-hover:text-brand transition-colors line-clamp-2">
+                                <h3 class="text-xs sm:text-sm font-bold text-white leading-snug line-clamp-2">
                                     <?php the_title(); ?>
                                 </h3>
                             </div>

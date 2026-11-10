@@ -51,6 +51,42 @@ function iran_news_customize_register( $wp_customize ) {
         'choices'  => $cat_options,
     ) );
 
+    // Setting: Hero Desktop Posts Count
+    $wp_customize->add_setting( 'iran_hero_posts_desktop', array(
+        'default'           => 5,
+        'sanitize_callback' => 'absint',
+    ) );
+
+    $wp_customize->add_control( 'iran_hero_posts_desktop', array(
+        'label'       => __( 'تعداد پست‌ها در دسکتاپ', 'iran' ),
+        'description' => __( 'پیش‌فرض: ۵ پست (۱ پست اصلی بزرگ + ۴ پست فرعی)', 'iran' ),
+        'section'     => 'iran_hero_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 1,
+            'max'  => 10,
+            'step' => 1,
+        ),
+    ) );
+
+    // Setting: Hero Mobile Posts Count
+    $wp_customize->add_setting( 'iran_hero_posts_mobile', array(
+        'default'           => 3,
+        'sanitize_callback' => 'absint',
+    ) );
+
+    $wp_customize->add_control( 'iran_hero_posts_mobile', array(
+        'label'       => __( 'تعداد پست‌ها در موبایل', 'iran' ),
+        'description' => __( 'پیش‌فرض: ۳ پست', 'iran' ),
+        'section'     => 'iran_hero_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 1,
+            'max'  => 10,
+            'step' => 1,
+        ),
+    ) );
+
     // --- Latest News Section ---
     $wp_customize->add_section( 'iran_latest_news_section', array(
         'title'    => __( 'تنظیمات آخرین اخبار', 'iran' ),
