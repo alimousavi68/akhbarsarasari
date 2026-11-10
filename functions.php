@@ -203,9 +203,9 @@ add_action( 'widgets_init', 'iran_news_widgets_init' );
  * Enqueue scripts and styles.
  */
 function iran_news_scripts() {
-	// Enqueue main stylesheet
-	wp_enqueue_style( 'iran-news-style', get_stylesheet_uri(), array(), '1.0.0' );
-	wp_enqueue_style( 'iran-news-main', get_template_directory_uri() . '/assets/css/main.css', array(), '1.0.0' );
+	// Enqueue main stylesheet with dynamic filemtime versioning for cache busting
+	wp_enqueue_style( 'iran-news-style', get_stylesheet_uri(), array(), filemtime( get_stylesheet_directory() . '/style.css' ) );
+	wp_enqueue_style( 'iran-news-main', get_template_directory_uri() . '/assets/css/main.css', array(), filemtime( get_template_directory() . '/assets/css/main.css' ) );
 
 	// Enqueue scripts
 	wp_enqueue_script( 'lucide', get_template_directory_uri() . '/assets/js/lucide.min.js', array(), '1.0.0', true );
